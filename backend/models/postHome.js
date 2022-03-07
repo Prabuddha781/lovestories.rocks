@@ -1,16 +1,15 @@
 import mongoose from 'mongoose';
 
 const postSchema = mongoose.Schema({
-      title: String,
-    //   author: String,
-      content: String,
-    //   upvote: {type: Number, default: 0},
-    //   downvote: {type: Number, default: 0},
-    //   tags: [String],
-    //   createdAt: {
-    //       type: Number, 
-    //       default: new Date()
-    //   }
+    title: String,
+    content: String,
+    tags: {type: [String],
+        default: [""]},
+    like: {type: [String],
+          default: []},
+    likeCount : { type: Number,
+                  default: 0},
+    creator: String
 });
 
 const postMessage = mongoose.model('postSchema', postSchema);
