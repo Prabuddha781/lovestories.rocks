@@ -1,12 +1,12 @@
 import express from "express";
-import { getPost, createPost, updatePost, likePost, deletePost, getAuthorPost } from "../controllers/posts.js";
+import { getPost, createPost, updatePost, likePost, deletePost, getAuthorPost, getDocumentCount } from "../controllers/posts.js";
 import { getTop100, getRomantic, getSexy } from "../controllers/postQueries.js";
 
 import auth from '../middleware/auth.js';
 
 const router = express.Router();
 
-router.get('/', getPost);
+router.get('/:idx', getPost);
 router.post('/', createPost);
 router.patch('/:id', updatePost);
 router.patch('/:id/likePost', auth, likePost);
@@ -19,5 +19,7 @@ router.get('/getRomantic', getRomantic);
 router.get('/getSexy', getSexy);
 
 router.get('/getAuthorPost/:authorId', getAuthorPost)
+
+router.get('/getDocumentCount', getDocumentCount);
 
 export default router;
