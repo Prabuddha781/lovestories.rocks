@@ -1,28 +1,17 @@
 import postModel from '../models/postHome.js';
 import mongoose from 'mongoose';
 
-const LIMIT = 5;
+const LIMIT = 1000;
 
 export const getPost = async (req, res) => {
+    console.log("backend getPost running");
+    console.log(req.params);
     const { idx } = req.params;
     const start = (Number(idx) - 1) * LIMIT; 
     try{
         const findPosts = await postModel.find().limit(LIMIT).skip(start);
-        res.status(200).json(findPosts);
-    }
-    catch(error) {
-        res.status(404).json({ message: error.message })
-    }
-}
 
-export const getDocumentCount = async (req, res) => {
-    console.log("here in the controllers");
-    try{
-        const data = await postModel.count();
-        console.log(data, "from controllers - number of documents");
-        data = data/LIMIT;
-        console.log(data, "from controllers - number of documents");
-        res.status(200).json(data);
+        res.status(200).json(findPosts);
     }
     catch(error) {
         res.status(404).json({ message: error.message })
@@ -54,19 +43,22 @@ export const createPost = async (req, res) => {
 }
 
 export const updatePost = async (req, res) => {
+    console.log("inside updatePosts");
     const { id } = req.params;
     
     if (!mongoose.Types.ObjectId.isValid(id)) return res.status(403).send(`No post with id: ${id}`);
 
     const { title, content, tags, creator }  = req.body;
-
+    console.log(title, content, tags, creator, "still working");
     try{
         const newPost =  { title, content, tags, creator, _id: id } 
+        console.log("here above updatedPost");
         const updatedPost = await postModel.findByIdAndUpdate(id, newPost, {new: true});
         res.status(200).json(updatedPost);
     }
     catch (error){
-        console.log(error.message);
+        console.log(error);
+        res.status(409).json({ message: error.message });
     }
 }
 
