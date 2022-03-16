@@ -1,5 +1,6 @@
 import postModel from '../models/postHome.js';
 import highestLiked from '../models/highestLiked.js';
+import topHundred from '../models/top100.js';
 
 export const getBySearch = async(req, res) => {
     const { search, tags } = req.query;
@@ -16,49 +17,34 @@ export const getBySearch = async(req, res) => {
     }
 }
 
-export const getTop100 = async(req, res) => {
+export const updateTop100 = async(_req, _res) => {
     try{
         const query = [
             { $sort: { likeCount : -1, _id : -1 } },
             { $limit: 100 }
         ]
-        const newModel = await postModel.aggregate(query);
-        res.status(201).json(newModel);
+        const newModel = await postModel.aggregate(query); 
+        await topHundred.deleteMany({});
+        const top100Model = new topHundred({ posts: newModel });
+        await top100Model.save();
     }
     catch(error){
-        res.status(404).json({ message: error.message });
+        console.log(error);
     }
 }
 
-export const getRomantic = async(req, res) => {
+export const getTop100 = async(_req, res) => {
     try{
-        const newModel = await postModel.aggregate([
-        { $match : { "tags": "Romantic" } },
-        { $sort : { likeCount : -1, _id : -1 } }
-        ]
-        )
-        res.status(201).json(newModel);
+        const posts = await topHundred.find(); 
+        const allPosts = posts[0].posts;
+        res.status(200).json(allPosts);
     }
     catch(error){
         res.status(404).json({ message: error.message });
     }
 }
 
-export const getSexy = async(req, res) => {
-    try{
-        const newModel = await postModel.aggregate([
-            { $match : { "tags": { $in: ["Sexy", "Horny", "Intimate"] } } },
-            { $sort : { likeCount : -1, _id : -1 } }
-        ]
-        )
-        res.status(201).json(newModel);
-    }
-    catch(error){
-        res.status(404).json({ message: error.message });
-    }    
-}
-
-export const updateTags = async(req, res) => {
+export const updateTags = async(_req, res) => {
     try{
         console.clear();
         const allPosts = await postModel.find({}, {tags: 1, likeCount: 1});
@@ -82,7 +68,7 @@ export const updateTags = async(req, res) => {
     }
 }
 
-export const getHighestTags = async(req, res) => {
+export const getHighestTags = async(_req, res) => {
     try{
         const highestTags = await highestLiked.find();
         res.status(201).json(highestTags[0].allElements);

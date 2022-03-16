@@ -1,5 +1,5 @@
 import express from "express";
-import { getPost, createPost, updatePost, likePost, deletePost, getAuthorPost } from "../controllers/posts.js";
+import { getPost, createPost, updatePost, likePost, getAuthorPost } from "../controllers/posts.js";
 
 import auth from '../middleware/auth.js';
 
@@ -9,8 +9,6 @@ router.get('/:idx', getPost);
 router.post('/', createPost);
 router.patch('/:id', updatePost);
 router.patch('/:id/likePost', auth, likePost);
-// router.patch('/:id/dislikePost', auth, dislikePost);
-router.delete('/:id', deletePost);
 
 router.get('/getAuthorPost/:authorId', getAuthorPost);
 

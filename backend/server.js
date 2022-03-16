@@ -6,6 +6,7 @@ import cors from 'cors';
 import homeRouter from './routes/posts.js';
 import postQueries from './routes/postQueries.js';
 import { updateTags } from './controllers/postQueries.js';
+import { updateTop100 } from './controllers/postQueries.js';
 
 const app = express();
 
@@ -15,8 +16,9 @@ app.use(cors());
 
 app.use('/posts', homeRouter);
 app.use('/postQueries', postQueries)
-app.use('/calc', updateTags);
+
 setInterval(updateTags, 86400000);
+setInterval(updateTop100, 86400000);
 
 const CONNECTION_URL = 'mongodb+srv://Pierre81:Innovators81@cluster0.jtccm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 const PORT = process.env.PORT || 5005;
