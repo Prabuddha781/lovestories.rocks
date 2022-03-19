@@ -8,6 +8,13 @@ import homeRouter from './routes/posts.js';
 import postQueries from './routes/postQueries.js';
 import { updateTags } from './controllers/postQueries.js';
 import { updateTop100 } from './controllers/postQueries.js';
+let https;
+try {
+  https = await import('https');
+} catch (err) {
+  console.log('https support is disabled!');
+}
+
 
 const app = express();
 dotenv.config();
@@ -22,8 +29,12 @@ app.use('/postQueries', postQueries)
 app.get('/', (req, res) => {
   res.send('Welcome!');
 })
-setInterval(updateTags, 86400000);
-setInterval(updateTop100, 86400000);
+setInterval(updateTags, 8640000);
+setInterval(updateTop100, 8640000);
+
+setInterval(function() {
+  https.get("https://forever-love-1.herokuapp.com");
+}, 150000);
 
 // const CONNECTION_URL = 'mongodb+srv://Pierre81:Innovators81@cluster0.jtccm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 const PORT = process.env.PORT || 5005;
